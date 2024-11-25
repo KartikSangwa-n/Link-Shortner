@@ -7,11 +7,11 @@ const urlSchema = new mongoose.Schema({
             timestamp: { type: String },
             ipAddress: { type: String },
             location: {
-                ip: { type: String },
                 city: { type: String },
                 region: { type: String },
                 country: { type: String },
                 loc: { type: String },
+                org: { type: String },
                 postal: { type: String },
                 timezone: { type: String }
             }

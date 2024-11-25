@@ -1,3 +1,4 @@
+
 const { format } = require('date-fns');
 const ShortUniqueId = require('short-unique-id');
 const axios = require('axios');
@@ -29,13 +30,16 @@ exports.redirectUrl = async(req, res) => {
     const shortId = req.params.shortId;
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
+    const hostIp = ipAddress.split(',')[0].trim();
+    console.log(hostIp);
+
     let location = {};
-    // try {
-    //     const response = await fetch(`http://ipinfo.io/${ipAddress}/json`);
-    //     location = await response.json();
-    // } catch (err) {
-    //     console.error('Error fetching location data:', err);
-    // }
+    try {
+        const response = await fetch(`http://ipinfo.io/${hostIp}/json?token=2d63f2aeba459c`);
+        location = await response.json();
+    } catch (err) {
+        console.error('Error fetching location data:', err);
+    }
 
     const currTimestamp = format(Date.now(), 'MMM d, yyyy HH:mm')
     const urlPack = await URL.findOneAndUpdate({
