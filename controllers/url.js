@@ -1,10 +1,11 @@
 require('dotenv').config();
 const { format } = require('date-fns');
+const { toZonedTime } = require('date-fns-tz')
+const timeZone = 'Asia/Kolkata';
 const ShortUniqueId = require('short-unique-id');
 const axios = require('axios');
 const uid = new ShortUniqueId({ length: 10 });
 const URL = require('../models/url');
-
 
 exports.shortUrlGenerator = async(req, res) => {
     try{
@@ -42,7 +43,9 @@ exports.redirectUrl = async(req, res) => {
         console.error('Error fetching location data:', err);
     }
 
-    const currTimestamp = format(Date.now(), 'MMM d, yyyy HH:mm')
+    const currentTime = new Date();
+    const zonedTime = toZonedTime(currentTime, timeZone);
+    const currTimestamp = format(zonedTime, 'MMM d, yyyy HH:mm')
     const urlPack = await URL.findOneAndUpdate({
         shortId,
     },{ $push: {visitHistory:{timestamp: currTimestamp , ipAddress: hostIp, location} } } );
