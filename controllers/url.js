@@ -1,9 +1,10 @@
-
+require('dotenv').config();
 const { format } = require('date-fns');
 const ShortUniqueId = require('short-unique-id');
 const axios = require('axios');
 const uid = new ShortUniqueId({ length: 10 });
 const URL = require('../models/url');
+
 
 exports.shortUrlGenerator = async(req, res) => {
     try{
@@ -35,7 +36,7 @@ exports.redirectUrl = async(req, res) => {
 
     let location = {};
     try {
-        const response = await fetch(`http://ipinfo.io/${hostIp}/json?token=2d63f2aeba459c`);
+        const response = await fetch(`http://ipinfo.io/${hostIp}/json?token=${process.env.IPINFO_TOKEN}`);
         location = await response.json();
     } catch (err) {
         console.error('Error fetching location data:', err);
@@ -44,7 +45,7 @@ exports.redirectUrl = async(req, res) => {
     const currTimestamp = format(Date.now(), 'MMM d, yyyy HH:mm')
     const urlPack = await URL.findOneAndUpdate({
         shortId,
-    },{ $push: {visitHistory:{timestamp: currTimestamp , ipAddress, location} } } );
+    },{ $push: {visitHistory:{timestamp: currTimestamp , ipAddress: hostIp, location} } } );
 
     if (!urlPack) 
     {

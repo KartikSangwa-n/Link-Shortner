@@ -10,7 +10,7 @@ require('./db');
 
 const urlRoutes = require('./routes/urlRoutes');
 
-app.use('/url' ,urlRoutes);
+app.use('/' ,urlRoutes);
 app.get('/', (req, res) =>
 {
     res.send('API is running...');
